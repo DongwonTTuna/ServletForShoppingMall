@@ -22,20 +22,8 @@ public class CustomerDAO {
 
             DatabaseMetaData metaData = conn.getMetaData();
 
-            if (!doesTableExist(metaData, "orders")) {
-                executeSql(stmt);
-            }
-
             if (!doesTableExist(metaData, "customer")) {
-                executeSql(stmt);
-            }
-
-            if (!doesTableExist(metaData, "product")) {
-                executeSql(stmt);
-            }
-
-            if (!doesTableExist(metaData, "cart")) {
-                executeSql(stmt);
+                executeSql();
             }
 
         } catch (SQLException e) {
@@ -44,12 +32,12 @@ public class CustomerDAO {
     }
 
     private static boolean doesTableExist(DatabaseMetaData metaData, String tableName) throws SQLException {
-        try (ResultSet tables = metaData.getTables(null, null, tableName, null)) {
+        try (ResultSet tables = metaData.getTables(null, null, tableName.toUpperCase(), null)) {
             return tables.next();
         }
     }
 
-    private static void executeSql(Statement stmt) {
+    private static void executeSql() {
         try (Connection conn = ConnnectionManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(DBInfo.INITIAL_SQL);) {
             pstmt.execute();

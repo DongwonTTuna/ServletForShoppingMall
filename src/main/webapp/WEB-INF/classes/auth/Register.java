@@ -27,9 +27,6 @@ public class Register extends HttpServlet {
 
         Customer customer = new Customer(0, userEmail, userPassword);
         CustomerDAO.insert(customer);
-        HttpSession session = request.getSession();
-        session.setAttribute("customerInfo", customer);
-
         request.getRequestDispatcher("/auth/registerSuccess.jsp").forward(request, response);
     }
 }
