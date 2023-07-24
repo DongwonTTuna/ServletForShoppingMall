@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:5.7.42
+    platform: linux/amd64
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: marketDB
+    ports:
+      - 3307:3306
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
+    container_name: market_db
+  tomcat:
+    image: tomcat:8.5.91-jdk21-openjdk-slim
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./target:/usr/local/tomcat/webapps
+    depends_on:
+      - db
+    container_name: market_tomcat

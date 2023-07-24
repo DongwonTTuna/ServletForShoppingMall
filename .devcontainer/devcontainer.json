@@ -1,0 +1,8 @@
+{
+    "name": "Django Docker Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "tomcat",
+    "workspaceFolder": "/usr/local/tomcat",
+    "forwardPorts": ["3306:3306", "8080:8080"]
+  }
+  

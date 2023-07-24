@@ -1,11 +1,9 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import model.Customer;
 
@@ -16,38 +14,8 @@ public class CustomerDAO {
     private static final String UPDATE_CUSTOMER = "UPDATE customer SET userEmail=?, userPassword=? WHERE id=?";
     private static final String DELETE_CUSTOMER = "DELETE FROM customer WHERE id=?";
 
-    public static void checkTableIsExists() {
-        try (Connection conn = ConnnectionManager.getConnection();
-                Statement stmt = conn.createStatement();) {
-
-            DatabaseMetaData metaData = conn.getMetaData();
-
-            if (!doesTableExist(metaData, "customer")) {
-                executeSql();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static boolean doesTableExist(DatabaseMetaData metaData, String tableName) throws SQLException {
-        try (ResultSet tables = metaData.getTables(null, null, tableName.toUpperCase(), null)) {
-            return tables.next();
-        }
-    }
-
-    private static void executeSql() {
-        try (Connection conn = ConnnectionManager.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(DBInfo.INITIAL_SQL);) {
-            pstmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Customer login(String userEmail, String userPassword) {
-        checkTableIsExists();
         try (Connection conn = ConnnectionManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(LOGIN_SQL);) {
 
@@ -67,7 +35,6 @@ public class CustomerDAO {
     }
 
     public static boolean insert(Customer customer) {
-        checkTableIsExists();
         try (Connection conn = ConnnectionManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(INSERT_CUSTOMER);) {
             pstmt.setString(1, customer.getUserEmail());
